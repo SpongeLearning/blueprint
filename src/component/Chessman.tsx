@@ -25,7 +25,6 @@ const Chessman = memo((props: IProps) => {
   useEffect(() => {
     chessboardContainer.current = chessboard;
   }, [chessboard]);
-  console.log("current", x, y);
 
   useEffect(() => {
     let x1: number = 0;

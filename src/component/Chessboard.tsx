@@ -72,7 +72,6 @@ const Chessboard: FC = () => {
   useEffect(() => {
     interact(svgRef.current!).dropzone({
       ondrop: (event) => {
-        console.log("drop", event);
         if (event.relatedTarget.className === "menuItem") {
           addChessman(
             (event.dragEvent.client.x -
@@ -85,20 +84,32 @@ const Chessboard: FC = () => {
               chessboardContainer.current.k
           );
         }
-        console.log("drop at chessboard");
       },
     });
   }, [addChessman]);
 
   const onWheel = useCallback(
     (event) => {
-      console.log("onWheel", event.deltaY);
       event.persist();
-      dispatch(
-        updateChessboard({
-          k: chessboardContainer.current.k - event.deltaY / 200,
-        })
-      );
+      if (event.deltaY > 0) {
+        dispatch(
+          updateChessboard({
+            k: Math.max(
+              0.5,
+              chessboardContainer.current.k - event.deltaY / 200
+            ),
+          })
+        );
+        return;
+      }
+      if (event.deltaY < 0) {
+        dispatch(
+          updateChessboard({
+            k: Math.min(2, chessboardContainer.current.k - event.deltaY / 200),
+          })
+        );
+        return;
+      }
     },
     [dispatch]
   );
